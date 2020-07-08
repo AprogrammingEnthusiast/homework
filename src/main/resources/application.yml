@@ -1,0 +1,5 @@
+# 这里可以使用绝对路径
+quest:
+  area:
+    data:
+      path: "C:\Users\Administrator.FYYX-2019MKBIOI\Desktop\学习\homework\data\area.txt"
