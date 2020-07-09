@@ -19,9 +19,9 @@ import jdk.nashorn.internal.ir.debug.ObjectSizeCalculator;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = QuestApp.class)
 public class AreaServiceTest {
-	
-	private final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AreaServiceTest.class);
-	
+
+    private final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AreaServiceTest.class);
+
     @Autowired
     private AreaService areaService;
 
@@ -52,13 +52,15 @@ public class AreaServiceTest {
             areaService.getArea(phones[i]);
         }
         long time = System.currentTimeMillis() - t1;
-        log.info("time cost:{},  tps:{}", time, ((float)phones.length) / time * 1000);
+        log.info("time cost:{},  tps:{}", time, ((float) phones.length) / time * 1000);
     }
 
     @Test
     public void memoryUsage() {
-       long objectSize = ObjectSizeCalculator.getObjectSize(areaService) / 1024;
-       log.info("memory:{} KB", objectSize);
+        long NameArray = ObjectSizeCalculator.getObjectSize(AreaService.getNameArray()) / 1024;
+        log.info("NameArray memory:{} KB", NameArray);
+        long PrefixArray = ObjectSizeCalculator.getObjectSize(AreaService.getPrefixArray()) / 1024 / 1024;
+        log.info("PrefixArray memory:{} M", PrefixArray);
     }
 
 }

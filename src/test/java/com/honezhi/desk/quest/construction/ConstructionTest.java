@@ -9,10 +9,10 @@ public class ConstructionTest {
 
     private static byte[][] bytes = new byte[699000][];
 
-    //prefix为数组下标code为value
-    public static int[] prefixArray = new int[700000];
-    //code 为数组的下标
-    public static String[] nameArray= new String[600];
+    //prefix-1300000为数组下标code为value
+    public static short[]  prefixArray = new short[700000];
+    //code 为数组的下标 name 为 value
+    public static String[] nameArray   = new String[600];
 
     static {
         int bin = 0;
@@ -21,7 +21,7 @@ public class ConstructionTest {
             int random = new Random().nextInt(500) + 100;
             String msg = a + "\t" + random + "\t" + "测试地区." + random;
             bytes[bin] = msg.getBytes();
-            bin ++;
+            bin++;
         }
     }
 
@@ -35,64 +35,61 @@ public class ConstructionTest {
 
     }
 
-    public static void construction(){
+    public static void construction() {
         int length = bytes.length;
         //每一行
         ByteBuffer lineBuffer;
         //prefix+Code
-        ByteBuffer prefixCode;
-        ByteBuffer code;
-        ByteBuffer name;
+        ByteBuffer prefix = ByteBuffer.allocate(7);
+        ByteBuffer code = ByteBuffer.allocate(3);
+        ByteBuffer name = ByteBuffer.allocate(16);
         for (int i = 0; i < length; i++) {
             lineBuffer = ByteBuffer.wrap(bytes[i]);
-            prefixCode = ByteBuffer.allocate(7);
-            code = ByteBuffer.allocate(3);
-            name = ByteBuffer.allocate(16);
             int tableNum = 0;
 
             for (int j = 0; j < lineBuffer.limit(); j++) {
                 byte b = lineBuffer.get();
                 //'\t' 的ascii是9
-                if(b == 9){
+                if (b == 9) {
                     tableNum++;
                     continue;
                 }
 
-                //prefix+code
-                if(tableNum == 0) {
-                    prefixCode.put(b);
+                //prefix
+                if (tableNum == 0) {
+                    prefix.put(b);
                 }
                 //单独获取code
-                if(tableNum == 1){
+                if (tableNum == 1) {
                     code.put(b);
                 }
                 //要映射name
-                if(tableNum == 2) {
+                if (tableNum == 2) {
                     name.put(b);
                 }
             }
             //反转
             lineBuffer.flip();
-            prefixCode.flip();
+            prefix.flip();
             code.flip();
             name.flip();
             //给其赋值
-            int prefix = Integer.parseInt(new String(prefixCode.array()));
-            Integer c = new Integer(new String(code.array()));
-            prefixArray[getPrefixBin(prefix)] = c;
-            if(nameArray[c] == null){
-                nameArray[c] = new String(name.array());
+            int prefixBin = Integer.parseInt(new String(prefix.array()));
+            Short s = new Short(new String(code.array()));
+            prefixArray[getPrefixBin(prefixBin)] = s;
+            if (nameArray[s] == null) {
+                nameArray[s] = new String(name.array());
             }
             //清理
             lineBuffer.clear();
-            prefixCode.clear();
+            prefix.clear();
             code.clear();
             name.clear();
 
         }
     }
 
-    public static int getPrefixBin(int prefix){
+    public static int getPrefixBin(int prefix) {
         return prefix - 1300000;
     }
 }
