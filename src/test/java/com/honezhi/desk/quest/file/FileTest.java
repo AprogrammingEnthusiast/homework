@@ -4,12 +4,18 @@ import io.netty.util.CharsetUtil;
 import jdk.nashorn.internal.ir.debug.ObjectSizeCalculator;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
+import sun.nio.ch.ChannelInputStream;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 public class FileTest {
 
@@ -24,15 +30,17 @@ public class FileTest {
      */
     public static void main(String[] args) throws IOException {
         //FileUtilsTest();
-        NioTest();
+        //NioTest();
+        //a();
     }
 
     /**
      * FileUtils 使用的是FileInputStream 和 InputStreamReader
+     *
      * @throws IOException
      */
     public static void FileUtilsTest() throws IOException {
-        File file = new File("C:\\Users\\Administrator.FYYX-2019MKBIOI\\Desktop\\学习\\homework\\data\\area.txt");
+        File file = new File("D:\\project\\homework\\data\\area.txt");
         LineIterator it = FileUtils.lineIterator(file, "UTF-8");
         String[] list = new String[700000];
         int num = 0;
@@ -54,7 +62,7 @@ public class FileTest {
     }
 
     public static void NioTest() throws IOException {
-        File file = new File("C:\\Users\\Administrator.FYYX-2019MKBIOI\\Desktop\\学习\\homework\\data\\area.txt");
+        File file = new File("D:\\project\\homework\\data\\area.txt");
         FileInputStream fileInputStream = new FileInputStream(file);
         FileChannel fileInputChannel = fileInputStream.getChannel();
 
@@ -97,5 +105,16 @@ public class FileTest {
         System.out.println("Nio objectSize：" + objectSize + "M");
         System.out.println("Nio time：" + (end - begin) + "ms");
 
+    }
+
+    public static void a() throws IOException {
+        ChannelInputStream fileInputChannel = (ChannelInputStream) Files.newInputStream(Paths.get("D:\\project\\homework\\data\\area.txt"), StandardOpenOption.READ);
+        int size = fileInputChannel.available();
+        long begin = System.currentTimeMillis();
+        for (int i = 0; i < size; i++) {
+            int read = fileInputChannel.read();
+        }
+        long end = System.currentTimeMillis();
+        System.out.println("Nio time：" + (end - begin) + "ms");
     }
 }
